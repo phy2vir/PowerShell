@@ -26,21 +26,21 @@ TRY{
     }
 #IF the connection was successful get version and save to csv
 If ($SSH_Session) {
-Write-Host "Connected to Host - $SSH_Host"
-$SSH_OSVersion = Invoke-SSHCommand -SSHSession $SSH_Session -Command "if test -f /etc/centos-release ; then cat /etc/centos-release; else cat /etc/os-release | grep PRETTY_NAME= ; fi"
-#Check if OS is Cents if not REmove extra text from output
-if(!($SSH_OSVersion.Output -like "*CentOS*")){
-$SSH_OSVersion.Output=$SSH_OSVersion.Output.split('"')[1]
-}
-$SSH_OSVersion | Select  Host,@{l="OSVersion";e={$_.Output -join " "}} | export-csv -Path $OutFile -force -Append -NoTypeInformation
-$SSH_SessionStream.close()
-$SSH_Session | Remove-SSHSession | Out-Null
+    Write-Host "Connected to Host - $SSH_Host"
+    $SSH_OSVersion = Invoke-SSHCommand -SSHSession $SSH_Session -Command "if test -f /etc/centos-release ; then cat /etc/centos-release; else cat /etc/os-release | grep PRETTY_NAME= ; fi"
+    #Check if OS is Cents if not REmove extra text from output
+    if(!($SSH_OSVersion.Output -like "*CentOS*")){
+        $SSH_OSVersion.Output=$SSH_OSVersion.Output.split('"')[1]
+    }
+    $SSH_OSVersion | Select  Host,@{l="OSVersion";e={$_.Output -join " "}} | export-csv -Path $OutFile -force -Append -NoTypeInformation
+    $SSH_SessionStream.close()
+    $SSH_Session | Remove-SSHSession | Out-Null
 }
 #If connection was unsuccessful save the details to CSV
 else
 {
-$NoSSH_Host.Host=$SSH_Host
-$NoSSH_Host.Output="Could not Connect"
-$NoSSH_Host| Select  Host,@{l="OSVersion";e={$_.Output -join " "}} | export-csv -Path $OutFile -force -Append -NoTypeInformation
+    $NoSSH_Host.Host=$SSH_Host
+    $NoSSH_Host.Output="Could not Connect"
+    $NoSSH_Host| Select  Host,@{l="OSVersion";e={$_.Output -join " "}} | export-csv -Path $OutFile -force -Append -NoTypeInformation
 }
 }
