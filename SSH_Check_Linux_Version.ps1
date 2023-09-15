@@ -1,5 +1,5 @@
 #Script Created by Brian Farrugia 2022 - Feel free to use and modify.
-#The Script Uses the module SSH-POSH. Install-Module Posh-SSH
+#The Script Uses the module POSH-SSH . Can install it using the PS command "Install-Module Posh-SSH"
 #Imports the server list from a text file with a column of just the hostname
 #Attempts to connect to each server and saves the output in a CSV File 
 $SSH_Creds = Get-Credential #SSH Credentials
